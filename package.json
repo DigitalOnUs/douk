@@ -19,7 +19,41 @@
 				"command": "extension.consulize",
 				"title": "Create the consul file spec on save"
 			}
-		]
+		],
+		"configuration":{
+			"title": "consulizer configuration",
+			"type": "object",
+			"properties": {
+				"digitalonus.consulizer":{
+					"type": "object",
+					"properties":{
+						"clearConsole":{
+							"type": "boolean",
+							"description": "clean up output for extension",
+							"default": false
+						},
+						"commands":{
+							"type":"array",
+							"items": {
+								"type": "object",
+								"properties":{
+									"cmd":{
+										"type":"string",
+										"description":"command to execute",
+										"default": "inotx"
+									},
+									"isAsync": {
+										"type": "boolean",
+										"description": "execute it as async",
+										"default": false
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
