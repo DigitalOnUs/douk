@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+    <script src="js/foos.js"></script>
 </head>
 
 <body>
@@ -20,7 +21,7 @@
             <nav class="tabs is-boxed is-fullwidth is-large">
                 <div class="container">
                     <ul>
-                        <li class="tab is-active" onclick="openTab(event,'WebDev')"><a>Create blueprint</a></li>
+                        <li class="tab is-active" onclick="SendToBackend()"><a>Create blueprint</a></li>
                     </ul>
                 </div>
             </nav>
@@ -32,9 +33,9 @@
             <div class="tile is-ancestor">
                 <div class="tile is-4 is-vertical is-parent">
                     <div class="tile is-child box">
-                        <div id="file-js-example" class="file has-name">
+                        <div id="file-upload" class="file has-name">
                             <label class="file-label">
-                                <input class="file-input" type="file" name="resume">
+                                <input class="file-input" type="file" name="resume" onchange="UploadFile()">
                                 <span class="file-cta">
                                                 <span class="file-icon">
                                                   <i class="fas fa-upload"></i>
@@ -45,14 +46,14 @@
                                 </span>
                                 <span class="file-name">
                                                 No file uploaded
-                                              </span>
+                                </span>
                             </label>
                         </div>
                     </div>
                     <div class="tile is-child box">
                         <div class="field">
                             <div class="control">
-                                <textarea class="textarea is-large" placeholder="Large textarea"></textarea>
+                                <textarea class="textarea" placeholder="Content file" id="input-doc"></textarea>
                             </div>
                         </div>
                     </div>
