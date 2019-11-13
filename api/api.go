@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -69,7 +70,6 @@ func Consulize(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
 	w.WriteHeader(http.StatusOK)
-	fmt.Printf("%+v\n", input)
 }
 
 func convert(input File) (out Response, err error) {
@@ -84,12 +84,60 @@ func convert(input File) (out Response, err error) {
 	defaultName := "inputDocument" + input.Extension
 
 	reader := bytes.NewReader(input.Payload)
-	_, err = config.Parse(reader, defaultName, ext)
+	document, err := config.Parse(reader, defaultName, ext)
+
+	if err != nil {
+		return
+	}
+	// translate document
+	documentWithConsul, err := config.AddConsul(document)
 	if err != nil {
 		return
 	}
 
-	//fmt.Println(document)
+	// getting the output hcl/json
+	var b bytes.Buffer
+	payload := bufio.NewWriter(&b)
+	err = config.Write(payload, ext, documentWithConsul)
+	if err != nil {
+		err = fmt.Errorf("Error generating the consul output file: %w", err)
+		return
+	}
+
+	// ------------ Image fetching with json only ----------------
+	// currently we support bot json and hcl , but for arcentry integration it is only json based
+
+	getJson := func(doc *config.Root) []byte {
+		var buf bytes.Buffer
+		writer := bufio.NewWriter(&buf)
+		config.WriteJSON(writer, doc)
+		return buf.Bytes()
+	}
+
+	// Would be bette just to check if it is hcl to do the conversion
+	// and just calculate one, but for demo, let's do everything
+	initial, final := getJson(document), getJson(documentWithConsul)
+	// by now just adding
+	// Polo : These are the jsons to plot with Arcentry
+	out.Images = []*File{
+		&File{
+			Extension: ".json", // redudant
+			Payload:   initial,
+		},
+		&File{
+			Extension: ".json", // redundant
+			Payload:   final,
+		},
+	}
+
+	// -----------------------------------------------------------
+
 	out.Code = http.StatusOK
+	//redudant
+	out.Consulfile = &File{
+		Extension: input.Extension,
+		Payload:   b.Bytes(),
+	}
+
 	return
 }

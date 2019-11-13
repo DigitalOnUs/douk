@@ -2,6 +2,8 @@ github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/DigitalOnUs/inotx v0.0.0-20191107184357-c03a049d875d h1:r5hH1hESIOW0vKjbx0dQtfDSkPX3cN0e4h3ouujxoMc=
 github.com/DigitalOnUs/inotx v0.0.0-20191107184357-c03a049d875d/go.mod h1:KVdI1XN2B90QKkrzkWPby7APnxz7tJctNBbiesuAxAE=
+github.com/DigitalOnUs/inotx v0.9.0 h1:3feLQehmPF+MyfVBTLeZb8DE2zNTN5xRfzB6v1BHo2c=
+github.com/DigitalOnUs/inotx v0.9.0/go.mod h1:KVdI1XN2B90QKkrzkWPby7APnxz7tJctNBbiesuAxAE=
 github.com/UnnoTed/fileb0x v1.1.4 h1:IUgFzgBipF/ujNx9wZgkrKOF3oltUuXMSoaejrBws+A=
 github.com/UnnoTed/fileb0x v1.1.4/go.mod h1:X59xXT18tdNk/D6j+KZySratBsuKJauMtVuJ9cgOiZs=
 github.com/agext/levenshtein v1.2.1 h1:QmvMAjj2aEICytGiWzmxoE0x2KZvE0fvmqMOfy2tjT8=
