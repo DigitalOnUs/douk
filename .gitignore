@@ -2,3 +2,14 @@ out
 node_modules
 .vscode-test/
 *.vsix
+douk.exe
+douk
+
+ Compiled Object files, Static and Dynamic libs (Shared Objects)
+swagger/api/
+swagger/api-js/
+# second items
+swagger/*.jar
+swagger/.swagger*
+swagger/.travis*
+

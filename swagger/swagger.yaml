@@ -1,0 +1,73 @@
+swagger: "2.0"
+info:
+  description: "API to create an interface with the consul picture "
+  version: "1.0.0"
+  title: "Douk"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "leopoldo.caballero@digitalonus.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "douk.digitalonus.com"
+basePath: "/api"
+schemes:
+- "https"
+- "http"
+paths:
+  /consulize:
+    post:
+      tags:
+      - "Add consul to a new document"
+      summary: "supports json + hcl"
+      description: ""
+      operationId: "addConsul"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "FileContent"
+        required: true
+        schema:
+          $ref: "#/definitions/File"
+      responses:
+        200:
+          description: "success response"
+          schema:
+            $ref: "#/definitions/ResponseAPI"
+        405:
+          description: "Invalid input"
+
+definitions:
+  File:
+    type: "object"
+    properties:
+      extension:
+        type: "string"
+        description: "extension of the file"
+      payload:
+        type: "string"
+        description: "content of the file"
+  ResponseAPI:
+    type: "object"
+    properties:
+      consulfile:
+        $ref: "#/definitions/File"
+      images:
+        type: "array"
+        items: 
+          $ref: "#/definitions/File"
+      
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+        
+        
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
