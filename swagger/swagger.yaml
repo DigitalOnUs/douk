@@ -38,7 +38,7 @@ paths:
           description: "success response"
           schema:
             $ref: "#/definitions/ResponseAPI"
-        405:
+        400:
           description: "Invalid input"
 
 definitions:

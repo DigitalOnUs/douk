@@ -5,10 +5,10 @@ import (
 	"flag"
 	"net/http"
 
+	"github.com/DigitalOnUs/douk/api"
+	"github.com/DigitalOnUs/douk/static"
 	"goji.io"
 	"goji.io/pat"
-
-	"github.com/DigitalOnUs/douk/static"
 )
 
 // APIs
@@ -24,10 +24,11 @@ func main() {
 	mux := goji.NewMux()
 	flag.Parse()
 
-	// For debugging replace the static.HTTP to defaultPath 
+	// For debugging replace the static.HTTP to defaultPath
 	// and _ comment the import for statics pre-compiled in the binary
 	//defaultPath := "./public"
-
+	mux.HandleFunc(pat.Post("/api/consulize"), api.Consulize)
 	mux.Handle(pat.Get("/*"), http.FileServer(static.HTTP))
+
 	http.ListenAndServe(address, mux)
 }
