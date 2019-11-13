@@ -54,12 +54,21 @@ func Consulize(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// basic validations
-	_, err := convert(input)
+	out, err := convert(input)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
+	js, err := json.Marshal(out)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+	w.WriteHeader(http.StatusOK)
 	fmt.Printf("%+v\n", input)
 }
 
@@ -75,12 +84,12 @@ func convert(input File) (out Response, err error) {
 	defaultName := "inputDocument" + input.Extension
 
 	reader := bytes.NewReader(input.Payload)
-	document, err := config.Parse(reader, defaultName, ext)
+	_, err = config.Parse(reader, defaultName, ext)
 	if err != nil {
 		return
 	}
 
-	fmt.Printf("%+v\n", document)
-
+	//fmt.Println(document)
+	out.Code = http.StatusOK
 	return
 }
