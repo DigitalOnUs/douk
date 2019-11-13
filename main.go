@@ -26,9 +26,9 @@ func main() {
 
 	// For debugging replace the static.HTTP to defaultPath
 	// and _ comment the import for statics pre-compiled in the binary
-	//defaultPath := "./public"
 	mux.HandleFunc(pat.Post("/api/consulize"), api.Consulize)
 	mux.Handle(pat.Get("/*"), http.FileServer(static.HTTP))
+	//mux.Handle(pat.Get("/*"), http.FileServer(http.Dir("./public")))
 
 	http.ListenAndServe(address, mux)
 }

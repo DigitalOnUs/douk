@@ -1,16 +1,20 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
+
+	"github.com/DigitalOnUs/inotx/config"
 )
 
 //////// models //////////
 
 var (
-	ErrEmptyInputFile = errors.New("Empty file to consulize")
+	ErrEmptyInputFile      = errors.New("Empty file to consulize")
+	ErrorUnsupportedFormat = errors.New("Not supported extension")
 )
 
 //File struct
@@ -49,5 +53,43 @@ func Consulize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// basic validations
+	out, err := convert(input)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	js, err := json.Marshal(out)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+	w.WriteHeader(http.StatusOK)
 	fmt.Printf("%+v\n", input)
+}
+
+func convert(input File) (out Response, err error) {
+	out = Response{}
+
+	if input.Extension != ".hcl" && input.Extension != ".json" {
+		err = fmt.Errorf("%w : %s", ErrorUnsupportedFormat, input.Extension)
+		return
+	}
+
+	ext := input.Extension[1:]
+	defaultName := "inputDocument" + input.Extension
+
+	reader := bytes.NewReader(input.Payload)
+	_, err = config.Parse(reader, defaultName, ext)
+	if err != nil {
+		return
+	}
+
+	//fmt.Println(document)
+	out.Code = http.StatusOK
+	return
 }
