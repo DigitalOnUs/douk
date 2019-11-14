@@ -40,7 +40,13 @@ function Post(extension, uri, payload){
 
     xhr.onreadystatechange = function(){
         if (xhr.readyState === 4){
-            console.log(xhr.responseText);
+            // json 
+            var jsonResponse = JSON.parse(xhr.response);
+            if (jsonResponse){
+
+                console.log(jsonResponse["images"]);
+            
+            }
         }
     }
 
