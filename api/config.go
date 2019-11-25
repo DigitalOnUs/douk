@@ -61,6 +61,37 @@ func getIdFromName(name string) (string, error) {
 	return "", errors.New("Document not found")
 }
 
+func createDiagram(diagram []byte, id string) (bool, error) {
+	client := &http.Client{}
+
+	req, err := http.NewRequest(http.MethodPost, baseURL+"create-diagram/"+id, bytes.NewBuffer(diagram))
+	if err != nil {
+		return false, err
+	}
+
+	q := req.URL.Query()
+	q.Add("max_components_per_tier", "5")
+	q.Add("tier_gap", "8")
+	q.Add("group_margin", "3")
+	q.Add("group_padding", "1.25")
+	q.Add("comp_gap", "0.5")
+	req.URL.RawQuery = q.Encode()
+
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	res, err := client.Do(req)
+	if err != nil {
+		return false, err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return false, errors.New("we got a problem creating the embed")
+	}
+
+	return true, nil
+}
+
 func createStaticEmbed(id string) ([]byte, error) {
 	client := &http.Client{}
 
@@ -88,6 +119,55 @@ func createStaticEmbed(id string) ([]byte, error) {
 func getEmbedByName(name string) ([]byte, error) {
 	id, err := getIdFromName(name)
 	if err != nil {
+		return nil, err
+	}
+
+	return createStaticEmbed(id)
+}
+
+func emptyDiagram(id string) (bool, error) {
+	client := &http.Client{}
+
+	doc := &DocumentById{DocId: id}
+
+	json, err := json.Marshal(doc)
+
+	req, err := http.NewRequest(http.MethodPost, baseURL+"doc/empty", bytes.NewBuffer(json))
+	if err != nil {
+		return false, err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	res, err := client.Do(req)
+	if err != nil {
+		return false, err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func getEmbedByJson(diagram []byte) ([]byte, error) {
+	id, err := getIdFromName("consul")
+	if err != nil {
+		return nil, err
+	}
+
+	transformed, err := transform(diagram)
+	if err != nil {
+		return nil, err
+	}
+
+	if ok, err := emptyDiagram(id); !ok {
+		return nil, err
+	}
+
+	if ok, err := createDiagram(transformed, id); !ok {
 		return nil, err
 	}
 
