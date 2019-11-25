@@ -61,22 +61,13 @@ func Consulize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = json.Marshal(out)
+	res, err := getEmbedByJson(out.Images[1].Payload)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-
-	// Here we need a valid json to send to arcentry, currently we only got an
-	// already transformed json :-P
-	res, err := getEmbedByName("consul")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
